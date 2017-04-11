@@ -5,14 +5,12 @@ import akka.http.scaladsl.server._
 import spray.json._
 
 
-trait CromIAMApiService extends Directives with SprayJsonSupport with DefaultJsonProtocol {
+trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJsonProtocol with RouteConcatenation {
 
   def returnInternalServerError(msg: String)  = HttpResponse(InternalServerError, entity = msg)
 
-
-  val workflowRoutes = queryRoute ~ queryPostRoute ~ workflowOutputsRoute ~ submitRoute ~ submitBatchRoute ~
+  val cromIamRoutes = queryRoute ~ queryPostRoute ~ workflowOutputsRoute ~ submitRoute ~ submitBatchRoute ~
     workflowLogsRoute ~ abortRoute ~ metadataRoute ~ timingRoute ~ statusRoute ~ backendRoute ~ statsRoute ~ versionRoute
-
 
   def statusRoute =
     path("workflows" / Segment / Segment / "status") { (version, possibleWorkflowId) =>
@@ -38,8 +36,7 @@ trait CromIAMApiService extends Directives with SprayJsonSupport with DefaultJso
     path("workflows" / Segment / "query") { version =>
       (post & entity(as[Seq[Map[String, String]]])) { parameterMap =>
           complete {
-//            returnInternalServerError("workflow query post")
-            JsString("workflow query post")
+            returnInternalServerError("workflow query post")
           }
       }
     }
