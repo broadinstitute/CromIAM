@@ -35,7 +35,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def queryPostRoute =
-    path("api" / "orkflows" / Segment / "query") { version =>
+    path("api" / "workflows" / Segment / "query") { version =>
       (post & entity(as[Seq[Map[String, String]]])) { parameterMap =>
           complete {
             returnInternalServerError("workflow query post")
