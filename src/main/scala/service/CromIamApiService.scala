@@ -1,3 +1,5 @@
+package service
+
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.model.StatusCodes._
@@ -13,7 +15,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     workflowLogsRoute ~ abortRoute ~ metadataRoute ~ timingRoute ~ statusRoute ~ backendRoute ~ statsRoute ~ versionRoute
 
   def statusRoute =
-    path("workflows" / Segment / Segment / "status") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "status") { (version, possibleWorkflowId) =>
       get {
         complete {
           returnInternalServerError("workflow status")
@@ -22,7 +24,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def queryRoute =
-    path("workflows" / Segment / "query") { version =>
+    path("api" / "workflows" / Segment / "query") { version =>
       parameterSeq { parameters =>
         get {
           complete {
@@ -33,7 +35,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def queryPostRoute =
-    path("workflows" / Segment / "query") { version =>
+    path("api" / "orkflows" / Segment / "query") { version =>
       (post & entity(as[Seq[Map[String, String]]])) { parameterMap =>
           complete {
             returnInternalServerError("workflow query post")
@@ -42,7 +44,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def abortRoute =
-    path("workflows" / Segment / Segment / "abort") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "abort") { (version, possibleWorkflowId) =>
       post {
         complete {
           returnInternalServerError("workflow abort")
@@ -51,7 +53,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def submitRoute =
-    path("workflows" / Segment) { version =>
+    path("api" / "workflows" / Segment) { version =>
       post {
         complete{
           returnInternalServerError("submit workflow")
@@ -60,7 +62,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def submitBatchRoute =
-    path("workflows" / Segment / "batch") { version =>
+    path("api" / "workflows" / Segment / "batch") { version =>
       post {
         complete {
           returnInternalServerError("batch submit workflow")
@@ -69,7 +71,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
       }
 
   def workflowOutputsRoute =
-    path("workflows" / Segment / Segment / "outputs") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "outputs") { (version, possibleWorkflowId) =>
       get {
         complete {
           returnInternalServerError("workflow outputs")
@@ -78,7 +80,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def workflowLogsRoute =
-    path("workflows" / Segment / Segment / "logs") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "logs") { (version, possibleWorkflowId) =>
       get {
         complete {
           returnInternalServerError("workflow logs")
@@ -87,7 +89,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def metadataRoute =
-    path("workflows" / Segment / Segment / "metadata") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "metadata") { (version, possibleWorkflowId) =>
       get {
         complete {
           returnInternalServerError("workflow metdata")
@@ -96,7 +98,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def timingRoute =
-    path("workflows" / Segment / Segment / "timing") { (version, possibleWorkflowId) =>
+    path("api" / "workflows" / Segment / Segment / "timing") { (version, possibleWorkflowId) =>
       get {
         complete {
           returnInternalServerError("workflow timing")
@@ -105,7 +107,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def statsRoute =
-    path("engine" / Segment / "stats") { version =>
+    path("api" / "engine" / Segment / "stats") { version =>
       get {
         complete {
           returnInternalServerError("engine stats")
@@ -114,7 +116,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def versionRoute =
-    path("engine" / Segment / "version") { version =>
+    path("api" / "engine" / Segment / "version") { version =>
       get {
         complete {
           returnInternalServerError("engine version")
@@ -123,7 +125,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
 
   def backendRoute =
-    path("workflows" / Segment / "backends") { version =>
+    path("api" / "workflows" / Segment / "backends") { version =>
       get {
         complete {
           returnInternalServerError("engine backends")
