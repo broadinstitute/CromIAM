@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 
 object CromIamServer extends HttpApp with CromIamApiService {
 
-  def run () = {
+  def run() = {
     CromIamServer.startServer(CromIamServer.config.getString("http.interface"), CromIamServer.config.getInt("http.port"), ServerSettings(CromIamServer.config))
   }
 
