@@ -24,7 +24,7 @@ object CromIamServer extends HttpApp with CromIamApiService {
 
   val config = ConfigFactory.load()
   val logger = Logging(system, getClass)
-  val route: Route = cromIamRoutes
+  val route: Route = allRoutes
 
   // Override default shutdownsignal which was just "hit return/enter"
   override def waitForShutdownSignal(actorSystem: ActorSystem)(implicit executionContext: ExecutionContext): Future[Done] = {

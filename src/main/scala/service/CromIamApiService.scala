@@ -11,8 +11,12 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
 
   def returnInternalServerError(msg: String)  = HttpResponse(InternalServerError, entity = msg)
 
-  val cromIamRoutes = queryRoute ~ queryPostRoute ~ workflowOutputsRoute ~ submitRoute ~ submitBatchRoute ~
-    workflowLogsRoute ~ abortRoute ~ metadataRoute ~ timingRoute ~ statusRoute ~ backendRoute ~ statsRoute ~ versionRoute
+  val workflowRoutes = queryRoute ~ queryPostRoute ~ workflowOutputsRoute ~ submitRoute ~ submitBatchRoute ~
+    workflowLogsRoute ~ abortRoute ~ metadataRoute ~ timingRoute ~ statusRoute ~ backendRoute
+
+  val engineRoutes = statsRoute ~ versionRoute
+
+  val allRoutes = workflowRoutes ~ engineRoutes
 
   def statusRoute =
     path("api" / "workflows" / Segment / Segment / "status") { (version, possibleWorkflowId) =>
