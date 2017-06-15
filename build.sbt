@@ -1,3 +1,5 @@
+import Version._
+
 name := "CromIam"
 organization := "org.broadinstitute"
 version := "1.0"
@@ -47,7 +49,6 @@ libraryDependencies ++= {
     exclude("org.typelevel", "cats-laws_2.11")
     exclude("org.typelevel", "cats-kernel-laws_2.11")
     )
-
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-stream" % akkaV,
@@ -63,6 +64,43 @@ libraryDependencies ++= {
     "org.broadinstitute" %% "lenthall" % lenthallV
   ) ++ catsDependencies
 }
+
+imageNames in docker := Seq(
+  ImageName(
+    namespace = Option("broadinstitute"),
+    repository = name.value.toLowerCase,
+    tag = Option(cromiamVersion)),
+  ImageName(
+    namespace = Option("broadinstitute"),
+    repository = name.value.toLowerCase,
+    tag = Option(version.value))
+)
+
+dockerfile in docker := {
+  // The assembly task generates a fat JAR file
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+
+  new Dockerfile {
+    from("openjdk:8")
+    expose(8000)
+    add(artifact, artifactTargetPath)
+    runRaw(s"ln -s $artifactTargetPath /app/cromiam.jar")
+
+    // If you use the 'exec' form for an entry point, shell processing is not performed and
+    // environment variable substitution does not occur.  Thus we have to /bin/bash here
+    // and pass along any subsequent command line arguments
+    // See https://docs.docker.com/engine/reference/builder/#/entrypoint
+    entryPoint("/bin/bash", "-c", "java ${JAVA_OPTS} -jar /app/cromiam.jar ${CROMIAM_ARGS} ${*}", "--")
+  }
+}
+
+buildOptions in docker := BuildOptions(
+  cache = false,
+  removeIntermediateContainers = BuildOptions.Remove.Always
+)
+
+enablePlugins(DockerPlugin)
 
 Revolver.settings
 resolvers ++= List(
