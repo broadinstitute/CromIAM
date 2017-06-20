@@ -1,8 +1,8 @@
-import Version._
+import com.typesafe.sbt.SbtGit._
 
 name := "CromIam"
 organization := "org.broadinstitute"
-version := "1.0"
+version := "1"
 
 scalaVersion := "2.12.1"
 
@@ -69,11 +69,7 @@ imageNames in docker := Seq(
   ImageName(
     namespace = Option("broadinstitute"),
     repository = name.value.toLowerCase,
-    tag = Option(cromiamVersion)),
-  ImageName(
-    namespace = Option("broadinstitute"),
-    repository = name.value.toLowerCase,
-    tag = Option(version.value))
+    tag = git.gitHeadCommit.value)
 )
 
 dockerfile in docker := {
