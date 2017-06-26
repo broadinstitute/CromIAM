@@ -2,7 +2,6 @@ import com.typesafe.sbt.SbtGit._
 
 name := "CromIam"
 organization := "org.broadinstitute"
-version := "1"
 
 scalaVersion := "2.12.1"
 
