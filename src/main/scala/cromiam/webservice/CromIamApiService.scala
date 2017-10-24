@@ -104,7 +104,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
   val workflowRoutes: Route = queryRoute ~ queryPostRoute ~ workflowOutputsRoute ~ submitRoute ~ submitBatchRoute ~
     workflowLogsRoute ~ abortRoute ~ metadataRoute ~ timingRoute ~ statusRoute ~ backendRoute ~ labelRoute ~ callCacheDiffRoute
 
-  val engineRoutes: Route = statsRoute ~ versionRoute
+  val engineRoutes: Route = statsRoute ~ versionRoute ~ engineStatusRoute
 
   val allRoutes: Route = workflowRoutes ~ engineRoutes
 
@@ -170,9 +170,16 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
 
   def backendRoute: Route = workflowGetRoute("backends")
 
-  def versionRoute: Route =  path("engine" / Segment / "version") { _ => handlePublicRequest(get) { req => forwardToCromwell(req) } }
+  def engineGetRoute(urlSuffix: String): Route = path("engine"/ Segment / urlSuffix) { _ =>
+    handlePublicRequest(get) { request => forwardToCromwell(request) }
+  }
 
-  def statsRoute: Route = path("engine" / Segment / "stats") { _ => handlePublicRequest(get) { _ => CromIamStatsForbidden } }
+  def versionRoute: Route = engineGetRoute("version")
+  def engineStatusRoute: Route = engineGetRoute("status")
+
+  def statsRoute: Route = path("engine" / Segment / "stats") { _ =>
+    handlePublicRequest(get) { _ => CromIamStatsForbidden }
+  }
 
   def queryRoute: Route = path("api" / "workflows" / Segment / "query") { _ =>
     parameterSeq { _ =>  handleRequestWithAuthn(get) { (_, _) =>  CromIamQueryNotImplemented } }
