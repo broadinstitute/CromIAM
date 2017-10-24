@@ -174,7 +174,7 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
 
   def queryPostRoute: Route = path("api" / "workflows" / Segment / "query") { _ =>
     (post & entity(as[Seq[Map[String, String]]])) { _ =>
-      handleRequestWithAuthn(post) { (_, _) =>  CromIamQueryNotImplemented  }
+      handleRequestWithAuthn(post) { (_, _) => CromIamQueryNotImplemented }
     }
   }
 
