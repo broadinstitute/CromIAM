@@ -134,14 +134,20 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     }
   }
 
-  def workflowGetRoute(urlSuffix: String): Route = workflowRoute(urlSuffix, get)
+  /**
+    * Base route for endpoints in the `workflows` space which do not take a workflow id as an argument
+    */
+  def workflowGetRoute(urlSuffix: String): Route = path("api" / "workflows" / Segment / urlSuffix) { _ =>
+    handleRequestWithAuthn(get) { (_, req) => forwardToCromwell(req) }
+  }
+
+  /**
+    * Base route for endpoints in the `workflows` space which take a workflow id as an argument
+    */
+  def workflowGetRouteWithId(urlSuffix: String): Route = workflowRoute(urlSuffix, get)
 
   def workflowRoute(urlSuffix: String, method: Directive0): Route = path("api" / "workflows" / Segment / Segment / urlSuffix) { (_, workflowId) =>
     handleRequestWithAuthn(method) { (userId, req) => authorizeReadThenForwardToCromwell(userId, List(workflowId), req) }
-  }
-
-  def generalGetRoute(urlSuffix: String): Route = path("api" / "workflows" / Segment / urlSuffix) { _ =>
-    handleRequestWithAuthn(get) { (_, req) => forwardToCromwell(req) }
   }
 
   def abortRoute: Route = path("api" / "workflows" / Segment / Segment / "abort") { (_, workflowId) =>
@@ -155,14 +161,14 @@ trait CromIamApiService extends Directives with SprayJsonSupport with DefaultJso
     handleRequestWithAuthn(post) { (userId, req) => forwardSubmissionToCromwell(userId, req, batch = true) }
   }
 
-  def workflowOutputsRoute: Route = workflowGetRoute("outputs")
-  def workflowLogsRoute: Route = workflowGetRoute("logs")
-  def metadataRoute: Route = workflowGetRoute("metadata")
-  def timingRoute: Route = workflowGetRoute("metadata")
-  def statusRoute: Route = workflowGetRoute("status")
+  def workflowOutputsRoute: Route = workflowGetRouteWithId("outputs")
+  def workflowLogsRoute: Route = workflowGetRouteWithId("logs")
+  def metadataRoute: Route = workflowGetRouteWithId("metadata")
+  def timingRoute: Route = workflowGetRouteWithId("metadata")
+  def statusRoute: Route = workflowGetRouteWithId("status")
   def labelRoute: Route = workflowRoute("labels", patch)
 
-  def backendRoute: Route = generalGetRoute("backends")
+  def backendRoute: Route = workflowGetRoute("backends")
 
   def versionRoute: Route =  path("engine" / Segment / "version") { _ => handlePublicRequest(get) { req => forwardToCromwell(req) } }
 
