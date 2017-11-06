@@ -2,14 +2,14 @@ package cromiam.cromwell
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import cromiam.cromwell.CromwellClient._
-import cromwell.api.model.CromwellStatus
 import com.softwaremill.sttp._
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import cromiam.cromwell.CromwellClient._
 import cromiam.server.status.StatusCheckedSubsystem
+import cromwell.api.model.CromwellStatus
 import cromwell.api.model.CromwellStatusJsonSupport._
 import spray.json._
 
