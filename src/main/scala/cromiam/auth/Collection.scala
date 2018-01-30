@@ -21,7 +21,7 @@ object Collection {
 
       val labels = labelsJson map { l =>
         Try(l.parseJson) match {
-          case Success(JsObject(json)) if json.keySet.contains(CollectionLabelName) => throw LabelContainsCollectionException
+          case Success(JsObject(json)) if json.keySet.contains(CollectionLabelName) => throw new LabelContainsCollectionException
           case Success(JsObject(json)) => json
           case _ => throw InvalidLabelsException(l)
         }
@@ -33,7 +33,8 @@ object Collection {
   val CollectionLabelName = "caas-collection-name"
   val LabelsKey = "labels"
 
-  case object LabelContainsCollectionException extends Exception(s"Submitted labels contain the key $CollectionLabelName, which is not allowed\n")
+  // LabelContainsCollectionException is a class because of ScalaTest, some of the constructs don't play well w/ case objects
+  final class LabelContainsCollectionException extends Exception(s"Submitted labels contain the key $CollectionLabelName, which is not allowed\n")
   private final case class InvalidLabelsException(labels: String) extends Exception(s"Labels must be a valid JSON object, received: $labels\n")
 
   implicit val collectionJsonReader = new JsonReader[Collection] {
