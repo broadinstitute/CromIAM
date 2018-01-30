@@ -46,7 +46,7 @@ class CromwellClient(scheme: String, interface: String, port: Int, log: LoggingA
 
     // Look up in Cromwell what the collection is for this workflow. If it doesn't exist, fail the Future
     client.labels(WorkflowId.fromString(workflowId)) flatMap {
-      _.toCollection match {
+      _.caasCollection match {
         case Some(c) => Future.successful(c)
         case None => Future.failed(new IllegalArgumentException(s"Workflow $workflowId has no associated collection"))
       }
@@ -76,7 +76,7 @@ object CromwellClient {
   implicit class EnhancedWorkflowLabels(val wl: WorkflowLabels) extends AnyVal {
     import Collection.CollectionLabelName
     import Collection.collectionJsonReader
-    def toCollection: Option[Collection] = {
+    def caasCollection: Option[Collection] = {
       wl.labels.fields.get(CollectionLabelName) map { _.convertTo[Collection] }
     }
   }
