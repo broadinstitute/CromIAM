@@ -20,6 +20,8 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 
 /**
   * Provides a CromIAM specific handle for Cromwell communication
+  *
+  * FIXME: Look for ways to synch this up with the mothership
   */
 class CromwellClient(scheme: String, interface: String, port: Int, log: LoggingAdapter)(implicit system: ActorSystem,
                                                                                         ece: ExecutionContextExecutor,

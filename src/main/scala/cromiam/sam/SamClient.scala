@@ -40,12 +40,12 @@ class SamClient(scheme: String, interface: String, port: Int, log: LoggingAdapte
     */
   def requestAuth(authorizationRequest: CollectionAuthorizationRequest): Future[Unit] = {
     val logString = authorizationRequest.action + " access for user " + authorizationRequest.user.userId +
-      "on a request to " + authorizationRequest.action +  " for collection " + authorizationRequest.collection.name
+      " on a request to " + authorizationRequest.action +  " for collection " + authorizationRequest.collection.name
 
     def validateEntityBytes(byteString: ByteString): Future[Unit] = {
       if (byteString.utf8String == "true") Future.successful(())
       else {
-        log.info("Sam denied " + logString)
+        log.warning("Sam denied " + logString)
         Future.failed(SamDenialException)
       }
     }

@@ -34,7 +34,6 @@ trait SubmissionSupport {
         toStrictEntity(Timeout) {
           extractSubmission(user) { submission =>
             extractRequest { request =>
-              println("REQ IS " + request)
               complete { forwardSubmissionToCromwell(user, submission.collection, request.withEntity(submission.entity)) }
             }
           }
@@ -92,6 +91,7 @@ object SubmissionSupport {
     formFieldMap.map(_.filterKeys(_.startsWith(WorkflowInputsAuxPrefix)))
   }
 
+  // FIXME: Much like CromwellClient see if there are ways of unifying this a bit w/ the mothership
   final case class WorkflowSubmission(collection: Collection,
                                       workflowSource: String,
                                       workflowType: Option[String],
